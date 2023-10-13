@@ -1,0 +1,184 @@
+/* Estilos para el cuerpo de la página */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos para el header */
+header {
+    color: #333;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.header .container .logo img {
+    width: 100px;
+
+}
+
+/* Estilos para el título de la tienda */
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Estilos para la navegación */
+nav {
+    border-top: #333;
+    text-align: center;
+    padding: 10px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+}
+
+nav li {
+    display: inline;
+    margin: 0 20px;
+}
+
+
+/* Estilos para los enlaces en la navegación */
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    border-bottom: 2px solid transparent; 
+    transition: border-bottom 0.3s;
+}
+
+nav a:hover {
+    border-bottom: 2px solid #a32d2d; 
+    color: #dc3545;
+}
+
+
+
+.bg-main{
+    background-color: #f5f5f5;
+}
+
+
+
+/* Estilos para la sección de productos */
+.product {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    width: 250px;
+   max-height: 60%;
+    text-align: center;
+}
+
+ img {
+    max-width: 100%;
+    height: auto;
+}
+
+ h3 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.price {
+    color: #333;
+    font-weight: bold;
+}
+
+
+
+
+.stars {
+    color: #FFD700; /* Color amarillo para las estrellas */
+    font-size: 18px;
+}
+
+/* Estilos para las reseñas en forma de estrellas */
+.stars::before {
+    content: "\2605"; /* Caracter estrella rellena */
+    margin: 0 2px;
+}
+
+/* Estilos para reseñas sin estrellas */
+.no-rating::before {
+    content: "\2606"; /* Caracter estrella vacía */
+}
+
+
+
+/*targetas*/
+.card-horizontal {
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Agrega sombra con valores de desplazamiento, difuminado y color */ /* Agrega sombra con valores de desplazamiento, difuminado y color */
+}
+
+.card-horizontal img {
+    max-width: 200px;
+    max-height: 350px;
+    margin-right: 10px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Agrega sombra con valores de desplazamiento, difuminado y color */
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h3 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.card-content p {
+    margin: 0;
+}
+
+  
+/* Estilos para la sección de imágenes */
+.section-img {
+    padding: 200px;
+    text-align: center;
+    position: relative;
+}
+
+/* Estilos para el contenedor de imágenes */
+
+
+
+/* Estilos para las imágenes */
+.image-bottom-left {
+    position: absolute;
+    width: 30%;
+    top: 0;
+    left: 0%;
+}
+
+.image-top-right {
+    position: absolute;
+    width: 30%;
+    top: 20%;
+    left: 70%;
+}
+
+/* Estilos para el contenido */
+.content {
+    text-align: center;
+}
+
+.content h2 {
+    font-size: 24px;
+}
+
+.content p {
+    font-size: 16px;
+}
+
