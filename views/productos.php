@@ -1,9 +1,10 @@
 <?php
 require '../models/database.php';
+require '../controllers/config.php';
 $db = new Database();
 $con = $db->conectar();
 
-$sql = $con->prepare("SELECT id, nombre, precio, descripcion, imagen FROM productos WHERE activo=1;");
+$sql = $con->prepare("SELECT id, nombre, precio,  imagen FROM productos WHERE activo=1;");
 $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
@@ -90,11 +91,14 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                             <img src="<?php echo $row['imagen']?>" class="card-img-top" alt="zapato1">
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo $row['nombre'] ?></h5>
-                                    <p class="card-text"><?php echo $row['descripcion']?></p>
                                     <div class="stars">★★★★★</div>
                                     <!-- Puedes ajustar el número de estrellas según la calificación -->
                                     <div class="price">$<?php echo number_format($row['precio'], 2,'.', ','); ?></div>
-                                    <button class="btn btn-danger">Agregar al carrito</button>
+                                   <div class="btn-group">
+                                   <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN);?>" class="btn btn-outline-success">Ver detalles</a>
+                                   </div>
+                                   <a class="btn btn-danger">Al carrito!</a>
+                                   
                                 </div>
                             </div>
                             <!--fin card-->
