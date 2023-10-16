@@ -64,9 +64,9 @@ if($productos != null){
     <nav class="bg-danger">
         <ul>
             <li><a href="../index.php">Inicio</a></li>
-            <li><a href="./productos.html">Sandalias</a></li>
-            <li><a href="./productos.html">Zapatos</a></li>
-            <li><a href="./productos.html">Botas</a></li>
+            <li><a href="./productos.php">Sandalias</a></li>
+            <li><a href="./productos.php">Zapatos</a></li>
+            <li><a href="./productos.hp">Botas</a></li>
             <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                         <style>
                             svg {
@@ -112,12 +112,13 @@ if($productos != null){
                             <td> <img src="<?php echo $imagen; ?>" alt="Imagen del producto" width="60"></td>
                             <td><?php echo MONEDA . number_format($p_descuento, 2, '.', ','); ?></td>
                             <td>
-                                <input class="disabled" type="number" min="1" max="10" step="1" value="<?php echo $cantidad; ?>" size="5" id="cantidad_<?php echo $_id; ?>" onchange="">
+                                <input class="disabled" type="number" min="1" max="10" step="1" value="<?php echo $cantidad; ?>" size="5" id="cantidad_<?php echo $_id; ?>" onchange="acCantidad(this.value, <?php echo $_id; ?>)">
                             </td>
                             <td>
                                 <div id="subtotal_<?php echo $_id ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
                             </td>
-                            <td><a href="#" id="eliminar" class="btn btn-warning btn-sm" data-bs-id="<?php echo $_id ?>" data-bs-toggle="modal" data-bs-target="eliminaModal">Eliminar</a></td>
+                            <td><a href="#" id="eliminar" type="button"  class="btn btn-warning btn-sm" data-bs-id="<?php echo $_id ?>" data-bs-toggle="modal" data-bs-target="#eliminarModal">Eliminar</a></td>
+
                         </tr>
                 <?php }
                 } ?>
@@ -137,6 +138,28 @@ if($productos != null){
                 </div>
     </div>
 </main>
+
+
+<!-- Modal -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eliminarModalLabel">Alerta!!!</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ¿Desea eliminar el producto?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" id="btn-eliminar" class="btn btn-danger" onclick="eliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
  
 
@@ -267,11 +290,22 @@ if($productos != null){
         <!-- Swiper JS -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
         <script>
-            function addProducto(id, token) {
-                let url = '../clases/carrito.php'
+
+            let eliminarModal =document.getElementById("eliminarModal")
+            eliminarModal.addEventListener('show.bs.modal', (event)=>{
+                let button = event.relatedTarget
+                let id =button.getAttribute('data-bs-id')
+                let buttonEliminar = eliminarModal.querySelector(".modal-footer #btn-eliminar");
+                buttonEliminar.value = id;
+            })
+
+            
+            function acCantidad(cantidad, id) {
+                let url = '../clases/actualizarCarrito.php'
                 let formData = new FormData()
+                formData.append('action', 'agregar')
                 formData.append('id', id)
-                formData.append('token', token)
+                formData.append('cantidad', cantidad)
                 fetch(url, {
                     method: 'POST',
                     body: formData,
@@ -280,8 +314,43 @@ if($productos != null){
                 }).then(response => response.json())
                 .then(data=>{
                     if(data.ok){
-                        let elemento =document.getElementById('num_cart');
-                       elemento.innerHTML = data.numero;
+                        let divSubtotal = document.getElementById('subtotal_'+ id);
+                        divSubtotal.innerHTML = data.sub;
+
+
+                        let total = 0.00;
+                        let list =document.getElementsByName('subtotal[]')
+
+                        for(let i =0; i<list.length; i++){
+                            total +=parseFloat(list[i].innerHTML.replace(/[$,]/g, ''))
+                        }
+                        total = new Intl.NumberFormat('en-US',{
+                            minimumFractionDigits:2
+                        }).format(total);
+                        document.getElementById('total').innerHTML = '<?echo MONEDA; ?>' + total;
+                    }
+                })
+
+            }
+
+            function eliminar() {
+
+
+                let botonEliminar = document.getElementById('btn-eliminar');
+                let id =botonEliminar.value;
+                let url = '../clases/actualizarCarrito.php'
+                let formData = new FormData()
+                formData.append('action', 'eliminar')
+                formData.append('id', id)
+                fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'cors'
+                    
+                }).then(response => response.json())
+                .then(data=>{
+                    if(data.ok){
+                        location.reload();
                     }
                 })
 
