@@ -4,12 +4,20 @@ require '../controllers/config.php';
 $db = new Database();
 $con = $db->conectar();
 
-$sql = $con->prepare("SELECT id, nombre, precio,  imagen FROM productos WHERE activo=1;");
-$sql->execute();
-$resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+$productos = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : null;
 
+// session_destroy();
+$lista_carrito = array();
+if($productos != null){
+    foreach($productos as $clave => $cantidad){
 
-?>
+        $sql = $con->prepare("SELECT id, nombre, precio, descuento, imagen,  $cantidad AS cantidad FROM productos WHERE id=? AND activo=1;");
+       
+        $sql->execute([$clave]);
+        $lista_carrito[] = $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+?> 
 
 
 
@@ -55,11 +63,11 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     <!-- Sección de Navegación -->
     <nav class="bg-danger">
         <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="../views/productos.php">Botas</a></li>
-            <li><a href="../views/productos.php">Sandalias</a></li>
-            <li><a href="../views/productos.php">Zapatos</a></li>
-            <li><a href="./v_carrito.php"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <li><a href="../index.php">Inicio</a></li>
+            <li><a href="./productos.html">Sandalias</a></li>
+            <li><a href="./productos.html">Zapatos</a></li>
+            <li><a href="./productos.html">Botas</a></li>
+            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                         <style>
                             svg {
                                 fill: #fff
@@ -70,47 +78,67 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
         </ul>
     </nav>
 
-    <main class="container">
-        <!-- Sección de Inicio de Sesión -->
-        <h1 class="fw-bold text-danger">new balance</h1>
+    <main class="container mt-5 mb-5">
+    <div class="table-responsive">
+        <table class="table table-hover  text-center">
+            <thead>
+                <tr>
+                    <th>Productos</th>
+                    <th>Imagen</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($lista_carrito == null) {
+                    echo '<tr><td colspan="6" class="text-center">Productos sin agregar</td></tr>';
+                } else {
+                    $total = 0;
+                    foreach ($lista_carrito as $producto) {
+                        $_id = $producto[0]['id'];
+                        $nombre = $producto[0]['nombre'];
+                        $cantidad = $producto[0]['cantidad'];
+                        $imagen = $producto[0]['imagen'];
+                        $precio = $producto[0]['precio'];
+                        $descuento = $producto[0]['descuento'];
+                        $p_descuento = $precio - (($precio * $descuento) / 100);
+                        $subtotal = $cantidad * $p_descuento; 
+                        $total += $subtotal; 
+                ?>
+                        <tr>
+                            <td><?php echo $nombre; ?></td>
+                            <td> <img src="<?php echo $imagen; ?>" alt="Imagen del producto" width="60"></td>
+                            <td><?php echo MONEDA . number_format($p_descuento, 2, '.', ','); ?></td>
+                            <td>
+                                <input class="disabled" type="number" min="1" max="10" step="1" value="<?php echo $cantidad; ?>" size="5" id="cantidad_<?php echo $_id; ?>" onchange="">
+                            </td>
+                            <td>
+                                <div id="subtotal_<?php echo $_id ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
+                            </td>
+                            <td><a href="#" id="eliminar" class="btn btn-warning btn-sm" data-bs-id="<?php echo $_id ?>" data-bs-toggle="modal" data-bs-target="eliminaModal">Eliminar</a></td>
+                        </tr>
+                <?php }
+                } ?>
+                <tr>
+                    <td colspan="3"></td>
+                    <td colspan="3">
+                        <p class="h3" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
+                    </td>
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+                <div class="col-md-5 offset-md-7 d-grid gap-2">
+                    <button class="btn btn-danger btn-lg">Realizar Pago</button>
+                </div>
+    </div>
+</main>
 
-
-
-        <main class="container">
-            <h2 class="mt-5">Nuestros productos</h2>
-            <!--contenedor productos inicio-->
-            <div class="row">
-                
-                    <section class="col">
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 column-gap-3 justify-content-center text-center">
-                        <?php foreach ($resultado as  $row) { ?>
-                            <!--inicio card-->
-                            <div class="card col-md " data-aos="fade-up" style="width: 18rem;">
-                                
-                            
-                            <img src="<?php echo $row['imagen']?>" class="card-img-top" alt="zapato1">
-                                <div class="card-body">
-                                    <h5 class="card-title"><?php echo $row['nombre'] ?></h5>
-                                    <div class="stars">★★★★★</div>
-                                    <!-- Puedes ajustar el número de estrellas según la calificación -->
-                                    <div class="price">$<?php echo number_format($row['precio'], 2,'.', ','); ?></div>
-                                   <div class="btn-group">
-                                   <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN);?>" class="btn btn-outline-success">Ver detalles</a>
-                                   </div>
-                                   <button class="btn btn-outline-danger" type="button" onclick="addProducto(<?php echo  $row['id']; ?>, '<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>')">Agregar al carrito</button>
-                                   
-                                </div>
-                            </div>
-                            <!--fin card-->
-                        <?php } ?>
-                        </div>
-
-                        <!--fin card-->
-            </div>
-            </section>
-            </div>
-        </main>
-        <!--reseñas-->
+ 
 
         <!--- Inicio del footer-->
 
@@ -238,7 +266,28 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Swiper JS -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-        <script src="./javascript/app.js"></script>
+        <script>
+            function addProducto(id, token) {
+                let url = '../clases/carrito.php'
+                let formData = new FormData()
+                formData.append('id', id)
+                formData.append('token', token)
+                fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'cors'
+                    
+                }).then(response => response.json())
+                .then(data=>{
+                    if(data.ok){
+                        let elemento =document.getElementById('num_cart');
+                       elemento.innerHTML = data.numero;
+                    }
+                })
+
+            }
+ 
+        </script>
 
         <!--AOS-->
         <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -248,7 +297,6 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                 duration: 1000
             });
         </script>
-           <script src="../javascript/app.js"></script>
 </body>
 
 </html>

@@ -3,7 +3,7 @@ require '../models/database.php';
 require '../controllers/config.php';
 $db = new Database();
 $con = $db->conectar();
-
+// session_destroy();
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $token = isset($_GET['token']) ? $_GET['token'] : '';
 
@@ -45,7 +45,7 @@ if ($id == '' || $token == '') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <!-- BOOTSTRAP CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- Swiper CCS -->
@@ -84,7 +84,7 @@ if ($id == '' || $token == '') {
             <li><a href="../views/productos.html">Sandalias</a></li>
             <li><a href="../views/productos.html">Zapatos</a></li>
             <li><a href="../views/productos.html">Botas</a></li>
-            <li><a href="../views/productos.html"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <li><a href="./v_carrito.php"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                         <style>
                             svg {
                                 fill: #fff
