@@ -92,7 +92,10 @@ if($productos != null){
                 </tr>
             </thead>
             <tbody>
-                <?php if ($lista_carrito == null) {
+                <?php 
+                
+                $total = 0;
+                if ($lista_carrito == null) {
                     echo '<tr><td colspan="6" class="text-center">Productos sin agregar</td></tr>';
                 } else {
                     $total = 0;
