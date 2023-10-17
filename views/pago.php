@@ -16,6 +16,9 @@ if($productos != null){
         $sql->execute([$clave]);
         $lista_carrito[] = $sql->fetchAll(PDO::FETCH_ASSOC);
     }
+}else{
+    header("location: ../index.php");
+    exit;
 }
 ?> 
 
@@ -79,14 +82,19 @@ if($productos != null){
     </nav>
 
     <main class="container mt-5 mb-5">
-    <div class="table-responsive">
+        <div class="row">
+            <div class="col-6">
+                <h4>Detalles del pago</h4>
+                <div id="paypal-button-container"></div>
+            </div>
+
+            <div class="col-6">
+            <div class="table-responsive">
         <table class="table table-hover  text-center">
             <thead>
                 <tr>
-                    <th>Productos</th>
-                    <th>Imagen</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
+                    <th>Productos</th>                   
+                   
                     <th>Subtotal</th>
                     <th></th>
                 </tr>
@@ -112,63 +120,32 @@ if($productos != null){
                 ?>
                         <tr>
                             <td><?php echo $nombre; ?></td>
-                            <td> <img src="<?php echo $imagen; ?>" alt="Imagen del producto" width="60"></td>
-                            <td><?php echo MONEDA . number_format($p_descuento, 2, '.', ','); ?></td>
-                            <td>
-                                <input class="disabled" type="number" min="1" max="10" step="1" value="<?php echo $cantidad; ?>" size="5" id="cantidad_<?php echo $_id; ?>" onchange="acCantidad(this.value, <?php echo $_id; ?>)">
-                            </td>
+                           
+                            
                             <td>
                                 <div id="subtotal_<?php echo $_id ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
                             </td>
-                            <td><a href="#" id="eliminar" type="button"  class="btn btn-warning btn-sm" data-bs-id="<?php echo $_id ?>" data-bs-toggle="modal" data-bs-target="#eliminarModal">Eliminar</a></td>
+                          
 
                         </tr>
                 <?php }
                 } ?>
                 <tr>
-                    <td colspan="3"></td>
                     <td colspan="3">
-                        <p class="h3" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
+                        <p class="h3 text-end" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                     </td>
                     
                 </tr>
             </tbody>
-             
         </table>
-    </div>
-  
-    <?php if ($lista_carrito != null) {?>
-  
-  <div class="row">
-          <div class="col-md-5 offset-md-7 d-grid gap-2">
-              <a href="pago.php" class="btn btn-danger btn-lg">Realizar Pago</a>
-          </div>
-   </div>
-  <?php }?>
+            </div>
 
+
+        </div>
 </main>
 
 
-<!-- Modal -->
-<div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="eliminarModalLabel">Alerta!!!</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ¿Desea eliminar el producto?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" id="btn-eliminar" class="btn btn-danger" onclick="eliminar()">Eliminar</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
  
 
@@ -293,80 +270,60 @@ if($productos != null){
         <!-- Footer -->
 
         <!-- End of .container -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
         <!-- Swiper JS -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+        <!--API paypal-->
+        <script src="https://www.paypal.com/sdk/js?client-id=AdnNr3ISDnSg7C1qZIVg60s9Hez3KT6X-a0zH1ps_39l21g-81JJvgBx0INqjzj6okhFFpY81jQCtP1Z&currency=USD"></script>
+
+        <!--API paypal script-->
+
         <script>
+          paypal.Buttons({
+            style:{
+                color: 'blue',
+                shape: 'pill',
+                label: 'pay'
+            },
+                createOrder: function(data, actions){
 
-            let eliminarModal =document.getElementById("eliminarModal")
-            eliminarModal.addEventListener('show.bs.modal', (event)=>{
-                let button = event.relatedTarget
-                let id =button.getAttribute('data-bs-id')
-                let buttonEliminar = eliminarModal.querySelector(".modal-footer #btn-eliminar");
-                buttonEliminar.value = id;
-            })
+                    return actions.order.create({
+                     purchase_units:[{
+                            amount: {
+                             value : <?php echo $total; ?>
+                            }
+                        }]
+                    })
+                },
+                    onApprove: function (data, actions){
+                      
+                      let URL = '../clases/captura.php';
+                        actions.order.capture().then(function(detalles){
+                            //" aqui va el modal de "Gracias por el pago""
+                            console.log(detalles);
 
-            
-            function acCantidad(cantidad, id) {
-                let url = '../clases/actualizarCarrito.php'
-                let formData = new FormData()
-                formData.append('action', 'agregar')
-                formData.append('id', id)
-                formData.append('cantidad', cantidad)
-                fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'cors'
-                    
-                }).then(response => response.json())
-                .then(data=>{
-                    if(data.ok){
-                        let divSubtotal = document.getElementById('subtotal_'+ id);
-                        divSubtotal.innerHTML = data.sub;
+                            let url = '../clases/captura.php';
 
+                            return fetch(url,{
 
-                        let total = 0.00;
-                        let list =document.getElementsByName('subtotal[]')
-
-                        for(let i =0; i<list.length; i++){
-                            total +=parseFloat(list[i].innerHTML.replace(/[$,]/g, ''))
-                        }
-                        total = new Intl.NumberFormat('en-US',{
-                            minimumFractionDigits:2
-                        }).format(total);
-                        document.getElementById('total').innerHTML = '<?echo MONEDA; ?>' + total;
+                                method: 'post',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    detalles: detalles
+                                })
+                            })
+                        });
+                    },
+                    onCancel: function(data){
+                        console.log(data)
+                        alert("Pago cancelado");
                     }
-                })
 
-            }
-
-            function eliminar() {
-
-
-                let botonEliminar = document.getElementById('btn-eliminar');
-                let id =botonEliminar.value;
-                let url = '../clases/actualizarCarrito.php'
-                let formData = new FormData()
-                formData.append('action', 'eliminar')
-                formData.append('id', id)
-                fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'cors'
-                    
-                }).then(response => response.json())
-                .then(data=>{
-                    if(data.ok){
-                        location.reload();
-                    }
-                })
-
-            }
- 
-        </script>
-
+        }).render('#paypal-button-container')
+</script>
         <!--AOS-->
         <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
         <script>

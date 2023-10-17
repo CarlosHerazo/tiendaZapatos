@@ -1,0 +1,114 @@
+Array
+(
+    [detalles] => Array
+        (
+            [id] => 63X0793074333894L
+            [intent] => CAPTURE
+            [status] => COMPLETED
+            [purchase_units] => Array
+                (
+                    [0] => Array
+                        (
+                            [reference_id] => default
+                            [amount] => Array
+                                (
+                                    [currency_code] => USD
+                                    [value] => 50000.00
+                                )
+
+                            [payee] => Array
+                                (
+                                    [email_address] => sb-zuaei27778258@business.example.com
+                                    [merchant_id] => P2FKGWSNA6D7Y
+                                )
+
+                            [soft_descriptor] => PAYPAL *TEST STORE
+                            [shipping] => Array
+                                (
+                                    [name] => Array
+                                        (
+                                            [full_name] => John Doe
+                                        )
+
+                                    [address] => Array
+                                        (
+                                            [address_line_1] => Free Trade Zone
+                                            [admin_area_2] => Bogota
+                                            [admin_area_1] => Bogota
+                                            [postal_code] => 110111
+                                            [country_code] => CO
+                                        )
+
+                                )
+
+                            [payments] => Array
+                                (
+                                    [captures] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [id] => 6MK39069SP338003S
+                                                    [status] => COMPLETED
+                                                    [amount] => Array
+                                                        (
+                                                            [currency_code] => USD
+                                                            [value] => 50000.00
+                                                        )
+
+                                                    [final_capture] => 1
+                                                    [seller_protection] => Array
+                                                        (
+                                                            [status] => ELIGIBLE
+                                                            [dispute_categories] => Array
+                                                                (
+                                                                    [0] => ITEM_NOT_RECEIVED
+                                                                    [1] => UNAUTHORIZED_TRANSACTION
+                                                                )
+
+                                                        )
+
+                                                    [create_time] => 2023-10-16T23:06:55Z
+                                                    [update_time] => 2023-10-16T23:06:55Z
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [payer] => Array
+                (
+                    [name] => Array
+                        (
+                            [given_name] => John
+                            [surname] => Doe
+                        )
+
+                    [email_address] => sb-pqfg127785797@personal.example.com
+                    [payer_id] => HG5Q89HU2AY5L
+                    [address] => Array
+                        (
+                            [country_code] => CO
+                        )
+
+                )
+
+            [create_time] => 2023-10-16T23:06:38Z
+            [update_time] => 2023-10-16T23:06:55Z
+            [links] => Array
+                (
+                    [0] => Array
+                        (
+                            [href] => https://api.sandbox.paypal.com/v2/checkout/orders/63X0793074333894L
+                            [rel] => self
+                            [method] => GET
+                        )
+
+                )
+
+        )
+
+)
