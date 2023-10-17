@@ -4,7 +4,7 @@ require '../controllers/config.php';
 $db = new Database();
 $con = $db->conectar();
 
-$sql = $con->prepare("SELECT id, nombre, precio,  imagen FROM productos WHERE activo=1;");
+$sql = $con->prepare("SELECT id, nombre, precio,  imagen FROM productos WHERE estado='activo';");
 $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 

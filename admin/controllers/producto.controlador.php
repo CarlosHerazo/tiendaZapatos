@@ -6,18 +6,33 @@ class ControladorProducto{
         return $respuesta;
     }
 
-    // static public function crtRegistrarProducto($nombre, $precio, $descripcion, $imagen){
-    //     $respuesta = ModeloProducto::mdlRegistrarProducto($nombre, $precio, $descripcion, $imagen);
-    //     return $respuesta;
-    // }
+    static public function crtRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado){
 
-    // static public function crtActualizarProducto($codigo, $nombre, $precio, $descripcion, $imagen){
-    //     $respuesta = ModeloProducto::mdlActualizarProducto($codigo, $nombre, $precio, $descripcion, $imagen);
-    //     return $respuesta;
-    // }
-    // static public function crtEliminarProducto($codigo){    
-    //          $respuesta = ModeloProducto::mdlEliminarProducto($codigo);
-    //     return $respuesta;
-    // }
+            $respuesta = ModeloProducto::mdlRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado);
+            return $respuesta;
+        
+        
+    }
+
+
+    static public function crtEliminarProducto($id){
+
+        $respuesta = ModeloProducto::mdlEliminarProducto($id);
+        return $respuesta;
     
+    
+    }
+
+
+    static public function crtActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado){
+
+        $respuesta = ModeloProducto::mdlActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado);
+        return $respuesta;
+    
+    
+    }
+
+
+
+
 }

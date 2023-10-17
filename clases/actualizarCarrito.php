@@ -39,7 +39,7 @@ function agregar($id, $cantidad){
             $_SESSION['carrito']['productos'][$id] = $cantidad;
             $db = new Database();
             $con = $db->conectar();
-            $sql = $con->prepare("SELECT nombre, precio, descuento, descripcion, imagen  FROM productos WHERE id=? AND activo=1 LIMIT 1;");
+            $sql = $con->prepare("SELECT nombre, precio, descuento, descripcion, imagen  FROM productos WHERE id=? AND estado='activo' LIMIT 1;");
             $sql->execute([$id]);
             $row = $sql->fetch(PDO::FETCH_ASSOC);
 

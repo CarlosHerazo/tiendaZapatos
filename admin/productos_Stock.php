@@ -7,19 +7,22 @@
     </div>
     <section class="container-fluid">
 
-        <div class="btn-agregar-producto btn-agregar">
+        <div class="btn-agregar-producto btnAgregar">
             <button type="button" class="btn btn-info btn-sm mb-4" data-toggle="modal" data-target="#modal-actualizar-producto" data-dismiss="modal"><i class="fas fa-plus-square"></i>
                 Agregar Producto </button>
         </div>
 
-        <table id="tablaProductos" class="table table-striped text-center">
+        <table id="tablaProductos" class="table table-striped table-bordered nowrap text-center" style="width:100%">
             <thead>
-                <tr>
-                    <th>Codigo</th>
+                <tr class=" text-white bg-danger">
+                    <th>ID</th>
                     <th>Nombre</th>
-                    <th>Precio</th>
                     <th>Descripcion</th>
+                    <th>Precio</th>
+                    <th>Descuento</th>
                     <th>Imagen</th>
+                    <th>Estado</th>
+                    <th>Cantidad</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -40,9 +43,10 @@
         ========================--->
                 <div class="modal-header bg-info">
                     <h4 class="modal-title">Agregar Producto</h4>
-                    <button type="buttom" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
+
                 </div>
                 <!---===============
         MODAL BODY
@@ -51,7 +55,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <input type="hidden" name="codigo" id="idProducto" value="">
+                                <input type="hidden" name="idP" id="idProducto" value="">
                                 <label for="nombreP">Nombre</label>
                                 <input type="text" class="form-control" name="nombre" id="nombreP">
                             </div>
@@ -59,6 +63,10 @@
                         <div class="col-sm-4">
                             <label for="precioP">Precio</label>
                             <input type="number" class="form-control" name="precio" id="precioP">
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="precioP">descuento</label>
+                            <input type="number" class="form-control" name="descuento" id="descuentoP">
                         </div>
 
                         <div class="col-sm-4">
@@ -68,6 +76,17 @@
                         <div class="col-sm-4">
                             <label for="descripcionP">Descripcion</label>
                             <textarea type="text" class="form-control" rows="5" name="descripcion" id="descripcionP"></textarea>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="estadoP">Estado</label>
+                            <select type="text" class="form-control" rows="5" name="estado" id="estadoP">
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="cantidadP">Cantidad</label>
+                            <input type="number" class="form-control" rows="5" name="cantidad" id="cantidadP">
                         </div>
                     </div>
                 </div>
@@ -91,14 +110,23 @@
 
 
 <script>
+    $(document).ready(function() {
 
-    // $(document).ready(function() {
+        let action = "";
+        let Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButtom: false,
+            timer: 3000
+        })
+
+
+
         let table = $("#tablaProductos").DataTable({
             "ajax": {
                 "url": "ajax/producto.ajax.php",
                 "type": "POST",
                 "dataSrc": ""
-
 
             },
             "language": {
@@ -282,7 +310,7 @@
             },
 
             "columnDefs": [{
-                "targets": 5,
+                "targets": 8,
                 "sortable": false,
                 "render": function(data, type, full, meta) {
                     return "<div style='display:flex;'>" +
@@ -295,20 +323,30 @@
 
             }],
             "columns": [{
-                    "data": "codigo"
+                    "data": "id"
                 },
                 {
                     "data": "nombre"
                 },
                 {
-                    "data": "precio"
+                    "data": "descripcion"
                 },
                 {
-                    "data": "descripcion"
+
+                    "data": "precio"
                 },
 
                 {
+                    "data": "descuento"
+                },
+                {
                     "data": "imagen"
+                },
+                {
+                    "data": "estado"
+                },
+                {
+                    "data": "cantidad"
                 },
                 {
                     "data": "acciones"
@@ -319,145 +357,154 @@
 
 
 
-        // $("btn-agregar-producto").on("click", () => {
-        //     accion = "registrar"
-        // })
+        $('.btn-agregar-producto').on('click', function(){
+            action = "registrar";
+        });
+
+        $('#tablaProductos tbody').on('click', '.btnEliminar', function(){
+            let data = table.row($(this).parents('tr')).data();
+            let id = data["id"];
+        
+            let datos = new FormData();
+            datos.append('action',"eliminar");
+            datos.append('id',id);
+        
+
+            swal.fire({
+                title: "¿SEGURO?",
+                text: "¿Seguro que quiere eliminar el producto?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "Sí, Eliminar",
+                cancelButtonText: "Cancelar"
+            }).then(resultado =>{
+                if(resultado.value){
+
+
+                    //llamado ajax
+                    $.ajax({
+                        url: "ajax/producto.ajax.php",
+                        method: 'POST',
+                        data: datos,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success:function(respuesta){
+                            table.ajax.reload(null, false);
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Confirmado',
+                                text: 'La categoria se eliminó correctamente',
+                            })
+
+                        }
+                    })
+                }
+            })
 
 
 
-        // GUARDAR LA INFORMACION DEL PRODUCTO DESDE LA VENTANA MODAL
-        // $("#btnGuardar").on('click', function() {
+        })
+// EDITAR INFORMACION
 
+$('#tablaProductos tbody').on('click', '.btnEditar', function(){
+            let data = table.row($(this).parents('tr')).data();
+            action = "actualizar";
+            let datos = new FormData();
+            datos.append('action',"actualizar");
+                    
+                    $('#idProducto').val(data["id"]);
+                    $('#nombreP').val(data["nombre"]);
+                    $('#precioP').val(data["precio"]);
+                    $('#descuentoP').val(data["descuento"]);
+                    $('#descripcionP').val(data["descripcion"]);
+                    $('#imagenP').val(data["imagen"]);
+                    $('#cantidadP').val(data["cantidad"]);
+                    $('#estadoP').val(data["estado"]);
 
-        //     let id = $("#idProducto").val();
-        //     nombre = $("#nombreP").val(),
-        //         precio = $("#precioP").val(),
-        //         descripcion = $("#descripcionP").val(),
-        //         imagen = $("#imagenP").val()
-
-        //     let datos = new FormData();
-        //     datos.append('codigo', id);
-        //     datos.append('nombre', nombre);
-        //     datos.append('precio', precio);
-        //     datos.append('descripcion', descripcion);
-        //     datos.append('imagen', imagen);
-        //     datos.append('accion', accion);
-
-        //     Swal.fire({
-        //         title: "¡CONFIRMAR!",
-        //         text: "¿Está seguro que desea registrar el producto?",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonText: "Sí, Registrar",
-        //         cancelButtonText: "Cancelar"
-
-        //     }).then(resultado => {
-
-        //         if (resultado.value) {
-
-
-        //             $.ajax({
-        //                 url: "ajax/producto.ajax.php",
-        //                 method: "POST",
-        //                 data: datos,
-        //                 cache: false,
-        //                 contentType: false,
-        //                 processData: false,
-        //                 success: function(respuesta) {
-        //                     //console.log(respuesta);
-        //                     $("#modal-actualizar-producto").modal('hide');
-        //                     table.ajax.reload(null, false);
-
-        //                     $("#idProducto").val("");
-        //                     $("#nombreP").val("");
-        //                     $("#precioP").val("");
-        //                     $("#descripcionP").val("");
-        //                     $("#imagenP").val("");
-
-        //                     Toast.fire({
-        //                         icon: 'success',
-        //                         title: respuesta
-        //                     })
-
-        //                 }
-        //             })
-
-        //         } else {
-
-        //         }
-        //     })
-
-
-
-        // })
-        // // ACTUALIZAR UN PRODUCTO
-
-        // $("#tablaProductos tbody").on('click', '.btnEditar', function() {
-
-           
-
-        //     let data = table.row($(this).parents('tr')).data();
-        //     accion = "actualizar";
-        //     $("#idProducto").val(data[0]);
-        //     $("#nombreP").val(data[1]);
-        //     $("#precioP").val(data[2]);
-        //     $("#imagenP").val(data[3]);
-        //     $("#descripcionP").val(data[4]);
 
             
+})
+// GUARDAR LA INFORMACION DEL PRODUCTO
+        $('#btnGuardar').on('click', function() {
 
-        // })
 
-        // // ELIMINAR UN PRODUCTO
-        // $("#tablaProductos tbody").on('click', '.btnEliminar', function() {
-        //     let data = table.row($(this).parents('tr')).data();
+            let id = $('#idProducto').val(),
+                    nombre = $('#nombreP').val(),
+                     descuento = $('#descuentoP').val(),
+                    precio = $('#precioP').val(),
+                     descripcion = $('#descripcionP').val(),
+                     imagen = $('#imagenP').val(),
+                     cantidad = $('#cantidadP').val(),
+                     estado = $('#estadoP').val();
 
-        //     let id = data.codigo
+                    // Crear un objeto FormData para enviar los datos correctamente
+                    let formData = new FormData();
 
-        //     let datos = new FormData();
-        //     datos.append('accion', 'eliminar')
-        //     datos.append('codigo', id);
+                    formData.append('nombre', nombre);
+                    formData.append('id', id);
+                    formData.append('precio', precio);
+                    formData.append('descuento', descuento);
+                    formData.append('descripcion', descripcion);
+                    formData.append('imagen', imagen);
+                    formData.append('cantidad', cantidad);
+                    formData.append('estado', estado);
+                    formData.append('action', action);
 
-        //     Swal.fire({
-        //         title: 'CONFIRMACION',
-        //         text: "¿Está seguro de eliminar el registro?",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Si, Eliminar'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
 
-        //             // LLAMADO AJAX
-        //             $.ajax({
-        //                 url: "ajax/producto.ajax.php",
-        //                 method: "POST",
-        //                 data: datos,
-        //                 cache: false,
-        //                 contentType: false,
-        //                 processData: false,
-        //                 success: function(respuesta) {
-        //                     //console.log(respuesta);
-        //                     console.log(respuesta)
-        //                     table.ajax.reload(null, false);
+            swal.fire({
+                title: "!CONFIRMAR",
+                text: "¿DESEA CONFIRMAR?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "Si, deseo registrar",
+                cancelButtonText: "Cancelar"
+            }).then(resultado => {
+                if (resultado.value) {
 
-        //                     Toast.fire({
-        //                         icon: 'success',
-        //                         title: 'Confirmacion',
-        //                         text: 'El producto fue eliminado con exito',
-        //                         confirmButtonText: "Cerrar"
-        //                     })
+                    $.ajax({
+                        url: 'ajax/producto.ajax.php',
+                        method: 'POST',
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(respuesta) {
+                            table.ajax.reload(null, false);
+                            $('#nombreP').val('');
+                            $('#descuentoP').val('');
+                            $('#precioP').val('');
+                            $('#descripcionP').val('');
+                            $('#imagenP').val('');
+                            $('#cantidadP').val('');
+                            $('#estadoP').val('activo');
+                            Toast.fire({
+                                icon: 'success',
+                                title: respuesta
+                            })
 
-        //                 }
-        //             })
-        //         } else {
-        //             // alert("no se modifico el producto??")
-        //         }
-        //     })
-        // })
+                        } 
+                    });
 
-    // })
+
+
+                }else{
+                            
+                }
+            })
+
+
+        });
+    })
+
+
+
+
+
+
+
+
 
 
     // yuca: https://www.semana.com/resizer/wpm5cy7iLgNmWLwHGfjyNbMAnNc=/1280x0/smart/filters:format(jpg):quality(80)/cloudfront-us-east-1.images.arcpublishing.com/semana/2B666A7UU5CTLPPSF7MU7KOGTE.jpg

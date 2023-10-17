@@ -5,6 +5,9 @@
             <main>
             <div class="container-fluid">
                 <h1>Tabla detalles de la compra</h1>
+
+
+                
             </div>
             </main>
             <!--FIN DEL CONTENIDO-->

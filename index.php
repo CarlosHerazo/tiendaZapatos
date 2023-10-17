@@ -28,14 +28,14 @@ if ($_POST) {
         // Verificar la contraseña
         if(password_verify($contra, $hashedPassword)) {
             // La contraseña es correcta, puedes permitir el acceso
-            echo "Contraseña válida. Acceso permitido.";
+            echo "<div class='alert alert-success' role='alert'> Contraseña válida. Acceso permitido. </div>";
         } else {
             // La contraseña no coincide
-            echo "Contraseña incorrecta. Acceso denegado.";
+            echo "<div class='alert alert-danger' role='alert'>Contraseña incorrecta. Acceso denegado.</div>";
         }
     } else {
         // No se encontró el usuario en la base de datos
-        echo "Usuario no encontrado. Acceso denegado.";
+        echo  "<div class='alert alert-danger' role='alert'> Usuario no encontrado. Acceso denegado.</div>";
     }
 }
 ?>
@@ -105,6 +105,8 @@ if ($_POST) {
         <section class="row">
             <div class="col"  data-aos="fade-up" >
                 <h4>Iniciar Sesión</h4>
+                  
+
                 <form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
 
                     <div class="mb-3">

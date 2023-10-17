@@ -10,3 +10,4 @@
             <!--FIN DEL CONTENIDO-->
 
             <?php   require_once "./views/parte_inferior.php";   ?>
+            
