@@ -39,7 +39,7 @@ if(is_array($datos)){
         if($productos != null){
             foreach($productos as $clave => $cantidad){
         
-                $sql = $con->prepare("SELECT id, nombre, precio, descuento FROM productos WHERE id=? AND activo=1;");
+                $sql = $con->prepare("SELECT id, nombre, precio, descuento FROM productos WHERE id=? AND estado='activo';");
                
                 $sql->execute([$clave]);
                 $row_prod[] = $sql->fetchAll(PDO::FETCH_ASSOC);

@@ -41,10 +41,10 @@
     $(document).ready(function() {
 
         let action = "";
+
         let Toast = Swal.mixin({
             toast: true,
             position: "top-end",
-            showConfirmButtom: false,
             timer: 3000
         })
 
@@ -242,10 +242,8 @@
                 "sortable": false,
                 "render": function(data, type, full, meta) {
                     return "<center>" +
-                     "<div>" +
                         "<button type='button' class='btn btn-danger btn-sm btnEliminar'> " + "<i class='fas fa-trash'></i>" +
-                        "</button>" +
-                        "</div>" +
+                        "</button>" +                     
                         "<center>";
                 }
 
@@ -282,7 +280,7 @@
 
 
 
-        $('#tablaProductos tbody').on('click', '.btnEliminar', function() {
+        $('#tablaCompras tbody').on('click', '.btnEliminar', function() {
             let data = table.row($(this).parents('tr')).data();
             let id = data["id"];
 
@@ -304,7 +302,7 @@
 
                     //llamado ajax
                     $.ajax({
-                        url: "ajax/producto.ajax.php",
+                        url: "ajax/compra.ajax.php",
                         method: 'POST',
                         data: datos,
                         cache: false,

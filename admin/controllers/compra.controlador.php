@@ -7,5 +7,10 @@ class ControladorCompra{
     }
 
 
+    static public function crtEliminarCompra($id){
 
+        $respuesta = ModeloCompra::mdlEliminarCompra($id);
+        return $respuesta;
+    
+    }
 }

@@ -5,6 +5,8 @@ require_once("../modelo/detalles.modelo.php");
 
 class DetallesProducto {
 
+
+    public $id;
     public function MostrarDetalles(){
 
         $respuesta = ControladorDetalles::ctrMostrarDetalles();
@@ -13,7 +15,28 @@ class DetallesProducto {
     }
 
 
+    public function eliminarDetalles(){
+        $respuesta = ControladorDetalles::crtEliminarDetalles($this->id);
+        
+        echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+    }
+
+
+
 }
 
-$respuesta= new DetallesProducto();
-$respuesta -> MostrarDetalles();
+if(!isset($_POST["action"])){
+    $respuesta = new DetallesProducto();
+    $respuesta -> MostrarDetalles();
+}else{
+
+    if($_POST["action"] == "eliminar"){
+
+        $eliminar = new DetallesProducto();
+        $eliminar ->id = $_POST['id'];
+        $eliminar ->eliminarDetalles();
+
+    }
+}
+
+

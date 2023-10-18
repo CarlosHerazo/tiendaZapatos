@@ -7,6 +7,11 @@ class ControladorDetalles{
         return $respuesta;
     }
     
+    static public function crtEliminarDetalles($id){
+
+        $respuesta = ModeloDetalles::mdlEliminarDetalles($id);
+        return $respuesta;
     
+    }
     
     }

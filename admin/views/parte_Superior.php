@@ -104,6 +104,15 @@ if(isset($_SESSION['nombre'])){
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Detalles Compras
                             </a>
+                            <a class="nav-link" href="categorias.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Categorias
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Otros</div>
+                            <a class="nav-link" href="comentarios.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                               Comentarios
+                            </a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
