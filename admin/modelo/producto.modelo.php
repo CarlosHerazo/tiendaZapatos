@@ -4,18 +4,19 @@ require_once("conexion.php");
 
 class ModeloProducto{
     public static  function mdlMostrarProducto(){
-        $stnt = Conexion::conectar() -> prepare("SELECT `id`, `nombre`, `descripcion`, `precio`, `descuento`, `imagen`, `estado`,`cantidad`, 'x' AS acciones FROM `productos`;");
+        $stnt = Conexion::conectar() -> prepare("SELECT `id`, `nombre`, `descripcion`, `precio`, `descuento`, `imagen`, `estado`,`cantidad`, `id_categoria`, 'x' AS acciones FROM `productos`;");
         $stnt -> execute();
         return $stnt -> fetchAll();
         // $stnt = null;
     }
 
-    static public function mdlRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado){
+    static public function mdlRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado,  $categoria){
         // Preparar la consulta SQL (no es necesario usar comillas en los marcadores de posición)
-        $stmt = Conexion::conectar()->prepare("INSERT INTO `productos`( `nombre`, `descripcion`, `precio`, `descuento`, `imagen`, `cantidad`, `estado`) VALUES (:nombre, :descripcion, :precio, :descuento, :imagen, :cantidad, :estado)");
+        $stmt = Conexion::conectar()->prepare("INSERT INTO `productos`( `nombre`, `descripcion`, `precio`, `descuento`, `imagen`, `cantidad`, `id_categoria`, `estado`) VALUES (:nombre, :descripcion, :precio, :descuento, :imagen, :cantidad, :categoria, :estado)");
         
         // Vincular los valores a los marcadores de posición
         $stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(":categoria", $categoria, PDO::PARAM_STR);
         $stmt->bindParam(":descripcion", $descripcion, PDO::PARAM_STR);
         $stmt->bindParam(":precio", $precio, PDO::PARAM_STR);
         $stmt->bindParam(":descuento", $descuento, PDO::PARAM_STR);
@@ -57,7 +58,7 @@ class ModeloProducto{
         
     }
 
-    static public function mdlActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado){
+    static public function mdlActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado, $categoria){
       
     //     // Preparar la consulta SQL
         $stmt = Conexion::conectar()->prepare("UPDATE `productos` 
@@ -68,6 +69,7 @@ class ModeloProducto{
                                                     descripcion = :descripcion,
                                                     imagen = :imagen,
                                                     cantidad = :cantidad,
+                                                    id_categoria = :categoria,
                                                     estado = :estado
                                                     
                                                     
@@ -76,6 +78,7 @@ class ModeloProducto{
         // Vincular los valores a los marcadores de posición
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(":categoria", $categoria, PDO::PARAM_STR);
         $stmt->bindParam(":precio", $precio, PDO::PARAM_STR);
         $stmt->bindParam(":descuento", $descuento, PDO::PARAM_STR);
         $stmt->bindParam(":descripcion", $descripcion, PDO::PARAM_STR);

@@ -17,6 +17,7 @@
                 <tr class=" text-white bg-danger">
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Id Categoria</th>
                     <th>Descripcion</th>
                     <th>Precio</th>
                     <th>Descuento</th>
@@ -76,6 +77,10 @@
                         <div class="col-sm-4">
                             <label for="descripcionP">Descripcion</label>
                             <textarea type="text" class="form-control" rows="5" name="descripcion" id="descripcionP"></textarea>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="categoriaP">Categoria</label>
+                            <input type="number" class="form-control" rows="5" name="categoriaP" id="categoriaP">
                         </div>
                         <div class="col-sm-4">
                             <label for="estadoP">Estado</label>
@@ -310,11 +315,11 @@
             },
 
             "columnDefs": [{
-                "targets": 8,
+                "targets": 9,
                 "sortable": false,
                 "render": function(data, type, full, meta) {
                     return "<div style='display:flex;'>" +
-                        "<button style='whith:20px' type='button' class='btn btn-primary btn-sm btnEditar' data-toggle='modal' data-target='#modal-actualizar-producto'>" + "<i class='fas fa-pencil-alt'></i>" +
+                        "<button style='margin-right: 20px' type='button' class='btn btn-primary btn-sm btnEditar' data-toggle='modal' data-target='#modal-actualizar-producto'>" + "<i class='fas fa-pencil-alt'></i>" +
                         "</button>" +
                         "<button type='button' class='btn btn-danger btn-sm btnEliminar'> " + "<i class='fas fa-trash'></i>" +
                         "</button>" +
@@ -327,6 +332,9 @@
                 },
                 {
                     "data": "nombre"
+                },
+                {
+                    "data": "id_categoria"
                 },
                 {
                     "data": "descripcion"
@@ -422,6 +430,7 @@ $('#tablaProductos tbody').on('click', '.btnEditar', function(){
                     $('#imagenP').val(data["imagen"]);
                     $('#cantidadP').val(data["cantidad"]);
                     $('#estadoP').val(data["estado"]);
+                    $('#categoriaP').val(data["id_categoria"]);
 
 
             
@@ -432,12 +441,14 @@ $('#tablaProductos tbody').on('click', '.btnEditar', function(){
 
             let id = $('#idProducto').val(),
                     nombre = $('#nombreP').val(),
-                     descuento = $('#descuentoP').val(),
+                    descuento = $('#descuentoP').val(),
                     precio = $('#precioP').val(),
-                     descripcion = $('#descripcionP').val(),
-                     imagen = $('#imagenP').val(),
-                     cantidad = $('#cantidadP').val(),
-                     estado = $('#estadoP').val();
+                    descripcion = $('#descripcionP').val(),
+                    imagen = $('#imagenP').val(),
+                    cantidad = $('#cantidadP').val(),
+                    categoria = $('#categoriaP').val(),
+                    estado = $('#estadoP').val()
+                     
 
                     // Crear un objeto FormData para enviar los datos correctamente
                     let formData = new FormData();
@@ -450,6 +461,7 @@ $('#tablaProductos tbody').on('click', '.btnEditar', function(){
                     formData.append('imagen', imagen);
                     formData.append('cantidad', cantidad);
                     formData.append('estado', estado);
+                    formData.append('categoria', categoria);
                     formData.append('action', action);
 
 
@@ -478,6 +490,7 @@ $('#tablaProductos tbody').on('click', '.btnEditar', function(){
                             $('#descripcionP').val('');
                             $('#imagenP').val('');
                             $('#cantidadP').val('');
+                            $('#categoriaP').val('');
                             $('#estadoP').val('activo');
                             Toast.fire({
                                 icon: 'success',

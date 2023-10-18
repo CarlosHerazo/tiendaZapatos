@@ -6,9 +6,9 @@ class ControladorProducto{
         return $respuesta;
     }
 
-    static public function crtRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado){
+    static public function crtRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado, $categoria){
 
-            $respuesta = ModeloProducto::mdlRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado);
+            $respuesta = ModeloProducto::mdlRegistrarProducto($nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado,  $categoria);
             return $respuesta;
         
         
@@ -24,9 +24,9 @@ class ControladorProducto{
     }
 
 
-    static public function crtActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado){
+    static public function crtActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado,  $categoria){
 
-        $respuesta = ModeloProducto::mdlActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado);
+        $respuesta = ModeloProducto::mdlActualizarProducto($id, $nombre, $descripcion, $precio, $descuento, $imagen, $cantidad, $estado,  $categoria);
         return $respuesta;
     
     

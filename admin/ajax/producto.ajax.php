@@ -8,6 +8,7 @@ class ajaxCategoria {
 
    
     public $id;
+    public $categoria;
     public $nombre;
     public $descripcion;
     public $precio;
@@ -23,7 +24,7 @@ class ajaxCategoria {
     }
 
     public function registrarProducto(){
-        $respuesta = ControladorProducto::crtRegistrarProducto($this->nombre, $this->descripcion, $this->precio, $this->descuento, $this->imagen, $this->cantidad, $this -> estado);
+        $respuesta = ControladorProducto::crtRegistrarProducto($this->nombre, $this->descripcion, $this->precio, $this->descuento, $this->imagen, $this->cantidad, $this -> estado, $this -> categoria);
         
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
     }
@@ -35,7 +36,7 @@ class ajaxCategoria {
     }
 
     public function actualizarProducto(){
-        $respuesta = ControladorProducto::crtActualizarProducto($this->id, $this->nombre, $this->descripcion, $this->precio, $this->descuento, $this->imagen, $this->cantidad, $this -> estado);
+        $respuesta = ControladorProducto::crtActualizarProducto($this->id, $this->nombre, $this->descripcion, $this->precio, $this->descuento, $this->imagen, $this->cantidad, $this -> estado, $this -> categoria);
         
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
     }
@@ -62,6 +63,7 @@ if(!isset($_POST["action"])){
         $insertar ->imagen = $_POST['imagen'];
         $insertar ->cantidad = $_POST['cantidad'];
         $insertar ->estado = $_POST['estado'];
+        $insertar ->categoria = $_POST['categoria'];
         $insertar ->registrarProducto();
     }
        
@@ -84,6 +86,7 @@ if(!isset($_POST["action"])){
         $actualizar ->imagen = $_POST['imagen'];
         $actualizar ->cantidad = $_POST['cantidad'];
         $actualizar ->estado = $_POST['estado'];
+        $actualizar ->categoria = $_POST['categoria'];
         $actualizar ->actualizarProducto();
     }
 }
